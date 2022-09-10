@@ -68,7 +68,7 @@ def get_header(prog, test_count, pass_count):
 def run_report(testdir):
     testdir = pathlib.Path(testdir)
     tests = []
-    progs = 'gimpformats', 'xcftools'
+    progs = 'gimpformats', 'layeredimage', 'xcftools'
     test_count = 0
     pass_count = defaultdict(int)
     for xcf, gimp, result in get_results(testdir, progs):

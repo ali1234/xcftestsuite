@@ -5,7 +5,7 @@ import xcftestsuite.gimp
 
 
 def get_version(prog):
-    if prog in ('gimpformats', ):
+    if prog in ('gimpformats', 'layeredimage'):
         return prog + ' ' + version(prog)
     elif prog == 'xcftools':
         return prog + ' ' + subprocess.check_output(('xcf2png', '--version')).split()[-1].decode('utf8')
