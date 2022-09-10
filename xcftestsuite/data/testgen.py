@@ -4,6 +4,11 @@ from itertools import product
 from gimpfu import *
 
 
+all_modes = {
+    k[:-5].lower(): v for k, v in globals().items() if k.endswith('_MODE')
+}
+
+
 class Templates:
 
     def __init__(self):
@@ -74,8 +79,8 @@ class Image:
     @classmethod
     def make(cls, tests, layer1, layer2):
         i = Image(tests, str(layer1)+'_'+str(layer2))
-        i.template_layer(layer1.name, layer1.opacity, layer1.mode)
-        i.template_layer(layer2.name, layer2.opacity, layer2.mode)
+        i.template_layer(layer1.name, layer1.opacity, all_modes[layer1.mode])
+        i.template_layer(layer2.name, layer2.opacity, all_modes[layer2.mode])
         i.save()
         i.export()
 
@@ -83,7 +88,7 @@ class Image:
 def run(tests):
     templates = Image.layer_templates.names()
     opacities = (50.0, )
-    modes = (MULTIPLY_MODE, ADDITION_MODE)
+    modes = ('multiply', 'addition')
 
     layer_defs = [LayerDef(*args) for args in product(templates, opacities, modes)]
     test_count = len(layer_defs) ** 2
