@@ -42,6 +42,10 @@ class LayerDef:
             self.mode
         )
 
+    @classmethod
+    def gen_defs(cls, templates, opacities, modes):
+        return [LayerDef(*args) for args in product(templates, opacities, modes)]
+
 
 class Image:
 
@@ -86,13 +90,48 @@ class Image:
 
 
 def run(tests):
-    templates = Image.layer_templates.names()
-    opacities = (50.0, )
-    modes = ('multiply', 'addition')
+    fg_templates = ('wilbur', )
+    fg_opacities = (0.0, 50.0, 100.0)
+    fg_modes = (
+        'addition',
+        #'behind',
+        'burn',
+        'color',
+        #'color_erase',
+        'custom',
+        'darken_only',
+        'difference',
+        'dissolve',
+        'divide',
+        'dodge',
+        'fg_bg_hsv',
+        'fg_bg_rgb',
+        #'fg_transparent',
+        'grain_extract',
+        'grain_merge',
+        'hardlight',
+        'hue',
+        'lighten_only',
+        'multiply',
+        'normal',
+        'overlay',
+        'saturation',
+        'screen',
+        'softlight',
+        'subtract',
+        'value'
+    )
 
-    layer_defs = [LayerDef(*args) for args in product(templates, opacities, modes)]
-    test_count = len(layer_defs) ** 2
-    for n, (l1, l2) in enumerate(product(layer_defs, layer_defs), start=1):
+    fg_layer_defs = LayerDef.gen_defs(fg_templates, fg_opacities, fg_modes)
+
+    bg_templates = ('colour-gradient', 'alpha-gradient', 'empty')
+    bg_opacities = (0.0, 50.0, 100.0)
+    bg_modes = ('normal', )
+
+    bg_layer_defs = LayerDef.gen_defs(bg_templates, bg_opacities, bg_modes)
+
+    test_count = len(fg_layer_defs) * len(bg_layer_defs)
+    for n, (l1, l2) in enumerate(product(bg_layer_defs, fg_layer_defs), start=1):
         Image.make(tests, l1, l2)
         if n & 0xf == 0:
             print(n, '/', test_count)
